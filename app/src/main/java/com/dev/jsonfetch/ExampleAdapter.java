@@ -20,6 +20,10 @@ public class ExampleAdapter extends RecyclerView.Adapter <ExampleAdapter.Example
     private ArrayList <ExampleItem> mExampleList;
     private OnItemClickListener mListener;
 
+
+
+
+
     @Override
     public void onClick(View v) {
     }
@@ -79,8 +83,28 @@ public class ExampleAdapter extends RecyclerView.Adapter <ExampleAdapter.Example
             mImageView = itemView.findViewById(R.id.image_view);
             mTextViewCreator = itemView.findViewById(R.id.text_view_creator);
             mTextViewLikes = itemView.findViewById(R.id.text_view_likes);
+
+            itemView.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener!=null){
+                        int position=getAdapterPosition();
+                        if (position!=RecyclerView.NO_POSITION){
+                            mListener.OnItemClick( position );
+
+
+
+                        }
+                    }
+                }
+            } );
+
+
         }
     }
+
+
+
 }
 
 

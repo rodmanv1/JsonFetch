@@ -1,5 +1,6 @@
 package com.dev.jsonfetch;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,11 +19,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ExampleAdapter.OnItemClickListener {
     private RecyclerView mRecyclerView;
     private ExampleAdapter mExampleAdapter;
     private ArrayList<ExampleItem> mExampleList;
     private RequestQueue mRequestQueue;
+    public static final String EXTRA_URL="imageUrl";
+    public static final String EXTRA_CREATOR_NAME="creatorName";
+    public static final String EXTRA_LIKES="likeCount";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void parseJSON() {
-        String url = "https://pixabay.com/api/?key=5303976-fd6581ad4ac165d1b75cc15b3&q=dog&image_type=photo&pretty=true";
+        String url = "https://pixabay.com/api/?key=5303976-fd6581ad4ac165d1b75cc15b3&q=interior&design&image_type=photo&pretty=true";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -62,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
                             mExampleAdapter = new ExampleAdapter(MainActivity.this, mExampleList);
                             mRecyclerView.setAdapter(mExampleAdapter);
 
+                            mExampleAdapter.setOnItemClickListener(MainActivity.this );
+
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -74,5 +83,22 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mRequestQueue.add(request);
+    }
+
+    @Override
+    public void OnItemClick(int position) {
+        Intent detailIntent=new Intent( this,DetailActivity.class );
+        ExampleItem clickedItem=mExampleList.get( position );
+        detailIntent.putExtra(EXTRA_URL ,clickedItem.getmImageUrl() );
+        detailIntent.putExtra(EXTRA_CREATOR_NAME,clickedItem.getmCreator() );
+        detailIntent.putExtra(EXTRA_LIKES ,clickedItem.getLikeCount() );
+
+        startActivity( detailIntent );
+
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 }
